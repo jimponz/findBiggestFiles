@@ -1,3 +1,4 @@
+import datetime
 import sys, os
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtCore import QTimer,Qt
@@ -8,6 +9,8 @@ from PyQt5.QtWidgets import QApplication, QWidget,QPushButton, QHBoxLayout, QVBo
 from PyQt5.QtWidgets import QLineEdit, QFileDialog
 from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem, QHeaderView
 from PyQt5.QtWidgets import QListWidget
+
+from datetime import datetime
 
 
 qtcreator_file  = "findBiggestFiles.ui"
@@ -28,12 +31,12 @@ class File:
             size /= power
             n += 1
         return str(round(size,2)) + " " + power_labels[n]+'B'
-    
+
     def __init__(self,path):
         if os.path.isfile(path):
             self.path = path
             self.size = os.stat(path).st_size
-        
+
     def __str__(self):
         return "\nPath: " + self.path + "\nSize: " + self.format_bytes(self.size)
 
@@ -41,8 +44,10 @@ class File:
 
 class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     input_dir = os.getcwd()
+    dir_size = 0
     selected = ""
-    
+    listOfFiles = []
+
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -52,10 +57,11 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.buttonFolder.clicked.connect(self.onClickFolder)
         self.buttonDelete.clicked.connect(self.onClickDelete)
-        
+        self.buttonWrite.clicked.connect(self.onClickWrite)
+
         self.buttonDirChooser.clicked.connect(self.choose_dir)
         self.buttonRefresh.clicked.connect(self.inspect_dir)
-        
+
         self.labelPath.setText(self.input_dir)
         self.labelStatus.setText("Status: Pronto!")
 
@@ -75,9 +81,11 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 print('Button QMessageBox.Yes clicked.')
                 os.remove(filepath)
                 self.labelStatus.setText(filepath + " eliminato!")
-               
+
         except Exception as ex:
-            print("\nSi è verificata un'eccezione", ex)
+            message = "\nSi è verificata un'eccezione" + str(ex)
+            print(message)
+            self.labelStatus.setText(message)
 
     def onClickFolder(self):
         try:
@@ -85,44 +93,73 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             head, tail = os.path.split(filepath)
             os.startfile(head)
         except Exception as ex:
-            print("\nSi è verificata un'eccezione", ex)
+            message = "\nSi è verificata un'eccezione" + str(ex)
+            print(message)
+            self.labelStatus.setText(message)
 
-            
-    listOfFiles = []    
+
+    def onClickWrite(self):
+        try:
+            date_time = datetime.now().strftime("%m%d%Y%H%M%S")
+
+            prefix = date_time
+            suffix = "_results.txt"
+            filename = prefix + suffix
+            with open(filename, "a") as file:
+                file.write("\n---------- Analisi di " + self.input_dir + " (" +
+                    File.format_bytes(self, self.dir_size) + ")  ----------\n\n")
+
+                for elem in self.listOfFiles:
+                    file.write(str(elem))
+                    file.write("\n")
+            self.labelStatus.setText("Status: File scritto correttamente!")
+
+        except Exception as ex:
+            message = "\nSi è verificata un'eccezione in onClickWrite " + str(ex)
+            print(message)
+            self.labelStatus.setText(message)
+
     def inspect_dir(self, input_dir):
         contFile = 0
         dirSize = 0
-        
+
+        self.input_dir = input_dir
+
         # carica nomi file da cartella
         if os.path.isdir(input_dir):
+            # FONDAMENTALE
             self.listWidget.clear()
-            
+            self.listOfFiles.clear()
+
             message = "Status: Analizzando la cartella " + input_dir
             print(message)
             self.labelStatus.setText(message)
-            
+
             for root,d_names,f_names in os.walk(input_dir):
                 for fi in f_names:
                     try:
                         filename = os.path.join(root, fi)
-                        
+
                         file = File(filename)
                         dirSize += file.size
                         self.listOfFiles.append(file)
-                        
+
                         contFile += 1
-                    except Exception as err:
-                        message = "Errore analizzando il file: " + filename + "Si è verificata un'eccezione: " + str(err)
+                    except Exception as ex:
+                        message = "Errore analizzando il file: " + filename + "Si è verificata un'eccezione: " + str(ex)
                         print(message)
                         self.labelStatus.setText(message)
+
+            self.dir_size = dirSize
 
             self.listOfFiles.sort(key=lambda x: x.size, reverse=True)
             for f in self.listOfFiles:
                 self.listWidget.addItem(str(f.format_bytes(f.size)) + "\t" + f.path)
 
-                    
+
             self.labelStatus.setText("Status: Pronto!")
-            message = "Nella cartella attuale (" + File.format_bytes(self,dirSize) + ") sono presenti i seguenti " + str(contFile) + " file:"
+            message = "Nella cartella attuale (" + File.format_bytes(self, dirSize) + \
+                      ") sono presenti i seguenti " + str(contFile) + " file:"
             self.labelList.setText(message)
             if contFile == 0:
                 self.listWidget.clear()
@@ -131,16 +168,16 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def choose_dir(self):
-        print("prova develop")
         try:
-            self.input_dir = QFileDialog.getExistingDirectory(self, "Scegli la cartella che vuoi decriptare", self.input_dir)
+            self.input_dir = QFileDialog.getExistingDirectory(self, "Scegli la cartella da analizzare", self.input_dir)
             self.labelPath.setText(self.input_dir)
 
             self.inspect_dir(self.input_dir)
-            
+
         except Exception as ex:
-            message = "Errore analizzando il file: " + filename + str("Si è verificata un'eccezione:", err)
+            message = "\nSi è verificata un'eccezione in choose_dir " + str(ex)
             print(message)
+            self.labelStatus.setText(message)
 
 
 
