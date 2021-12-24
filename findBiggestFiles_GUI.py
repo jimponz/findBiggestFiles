@@ -131,6 +131,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def choose_dir(self):
+        print("prova develop")
         try:
             self.input_dir = QFileDialog.getExistingDirectory(self, "Scegli la cartella che vuoi decriptare", self.input_dir)
             self.labelPath.setText(self.input_dir)
