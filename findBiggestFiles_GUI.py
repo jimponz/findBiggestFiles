@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QListWidget
 from datetime import datetime
 
 
+
 qtcreator_file  = "findBiggestFiles.ui"
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
@@ -48,10 +49,13 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     selected = ""
     listOfFiles = []
 
+
+
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+        self.showMaximized()
 
         self.listWidget.itemClicked.connect(self.onClicked)
 
@@ -68,24 +72,37 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.inspect_dir(self.input_dir)
 
 
+
     def onClicked(self,item):
         #QMessageBox.information(self, "Info", item.text())
-        self.selected = item.text()
-        self.labelSelected.setText(self.selected)
-
-    def onClickDelete(self):
         try:
-            filepath = self.selected.split("\t")[1]
-            ret = QMessageBox.question(self, 'Stai per cancellare dei file!', "Stai per cancellare " + filepath + " , vuoi procedere?", QMessageBox.Yes | QMessageBox.Cancel)
-            if ret == QMessageBox.Yes:
-                print('Button QMessageBox.Yes clicked.')
-                os.remove(filepath)
-                self.labelStatus.setText(filepath + " eliminato!")
+
+            self.selected = item.text()
+            self.labelSelected.setText(self.selected)
 
         except Exception as ex:
             message = "\nSi è verificata un'eccezione" + str(ex)
             print(message)
             self.labelStatus.setText(message)
+
+
+    def onClickDelete(self):
+        try:
+            filepath = self.selected.split("\t")[1]
+
+            ret = QMessageBox.question(self, 'Stai per cancellare dei file!', "<FONT COLOR='#aaa'>Stai per cancellare " + filepath + " , vuoi procedere?</FONT>", QMessageBox.Yes | QMessageBox.Cancel)
+            if ret == QMessageBox.Yes:
+                print('Button QMessageBox.Yes clicked.')
+                index = self.listWidget.currentRow()
+                self.listWidget.takeItem(index)
+                os.remove(filepath)
+                self.labelStatus.setText("Status: " + filepath + " ELIMINATO!")
+
+        except Exception as ex:
+            message = "\nSi è verificata un'eccezione" + str(ex)
+            print(message)
+            self.labelStatus.setText(message)
+
 
     def onClickFolder(self):
         try:
@@ -105,16 +122,23 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             prefix = date_time
             suffix = "_results.txt"
             filename = prefix + suffix
+
             with open(filename, "a") as file:
                 file.write("\n---------- Analisi di " + self.input_dir + " (" +
                     File.format_bytes(self, self.dir_size) + ")  ----------\n\n")
 
                 for elem in self.listOfFiles:
-                    file.write(str(elem))
-                    file.write("\n")
+                    try:
+                        file.write(str(elem))
+                        file.write("\n")
+                    except Exception as ex:
+                        message = "\nSi è verificata un'eccezione scrivendo: " + str(elem) + "\n" + str(ex)
+                        print(message)
+                        self.labelStatus.setText(message)
 
-            ret = QMessageBox.question(self, 'File scritto correttamente!',
-                                       "File scritto correttamente!\n\nLo trovi in " + os.path.join(self.input_dir,filename) + "\n\nLo vuoi aprire subito?",
+
+            ret = QMessageBox.question(self, 'File scritto correttamente!', "<FONT COLOR='#aaa'>File scritto correttamente!\n\nLo trovi in " +
+                                       os.path.join(self.input_dir, filename) + "\n\nLo vuoi aprire subito?</FONT>",
                                        QMessageBox.Yes | QMessageBox.Cancel)
             if ret == QMessageBox.Yes:
                 print('Button QMessageBox.Yes clicked.')
