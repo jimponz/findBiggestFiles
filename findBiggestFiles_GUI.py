@@ -112,6 +112,14 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 for elem in self.listOfFiles:
                     file.write(str(elem))
                     file.write("\n")
+
+            ret = QMessageBox.question(self, 'File scritto correttamente!',
+                                       "File scritto correttamente!\n\nLo trovi in " + os.path.join(self.input_dir,filename) + "\n\nLo vuoi aprire subito?",
+                                       QMessageBox.Yes | QMessageBox.Cancel)
+            if ret == QMessageBox.Yes:
+                print('Button QMessageBox.Yes clicked.')
+                os.startfile(filename)
+
             self.labelStatus.setText("Status: File scritto correttamente!")
 
         except Exception as ex:
