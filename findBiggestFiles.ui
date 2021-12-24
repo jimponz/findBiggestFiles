@@ -20,8 +20,7 @@
    <string>Trova i file più grandi nel PC</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
-background-color: rgb(54, 54, 54);</string>
+   <string notr="true">background-color: rgb(54, 54, 54);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="labelTitle">
@@ -145,9 +144,9 @@ color: rgb(255, 255, 0);</string>
    <widget class="QListWidget" name="listWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>130</y>
-      <width>1321</width>
+      <x>-210</x>
+      <y>120</y>
+      <width>1561</width>
       <height>381</height>
      </rect>
     </property>
@@ -159,7 +158,6 @@ color: rgb(255, 255, 0);</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(255, 255, 255);
-
 background-color: rgb(120, 120, 120);</string>
     </property>
    </widget>

@@ -71,6 +71,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.inspect_dir(self.input_dir)
 
+        self.setStyleSheet("MyWindow{ background-color: rgb(54, 54, 54);}")
 
 
     def onClicked(self,item):
@@ -90,7 +91,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             filepath = self.selected.split("\t")[1]
 
-            ret = QMessageBox.question(self, 'Stai per cancellare dei file!', "<FONT COLOR='#aaa'>Stai per cancellare " + filepath + " , vuoi procedere?</FONT>", QMessageBox.Yes | QMessageBox.Cancel)
+            ret = QMessageBox.question(self, 'Stai per cancellare dei file!', "Stai per cancellare " + filepath + " , vuoi procedere?", QMessageBox.Yes | QMessageBox.Cancel)
             if ret == QMessageBox.Yes:
                 print('Button QMessageBox.Yes clicked.')
                 index = self.listWidget.currentRow()
@@ -137,8 +138,8 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                         self.labelStatus.setText(message)
 
 
-            ret = QMessageBox.question(self, 'File scritto correttamente!', "<FONT COLOR='#aaa'>File scritto correttamente!\n\nLo trovi in " +
-                                       os.path.join(self.input_dir, filename) + "\n\nLo vuoi aprire subito?</FONT>",
+            ret = QMessageBox.question(self, 'File scritto correttamente!', "File scritto correttamente!\n\nLo trovi in " +
+                                       os.path.join(self.input_dir, filename) + "\n\nLo vuoi aprire subito?",
                                        QMessageBox.Yes | QMessageBox.Cancel)
             if ret == QMessageBox.Yes:
                 print('Button QMessageBox.Yes clicked.')
