@@ -90,7 +90,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             
     listOfFiles = []    
     def inspect_dir(self, input_dir):
-        print("prova")
         contFile = 0
         dirSize = 0
         
