@@ -43,7 +43,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     listOfFiles = []
 
 
-
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
