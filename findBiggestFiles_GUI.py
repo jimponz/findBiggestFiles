@@ -1,18 +1,11 @@
 import datetime
-import sys, os
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtCore import QTimer,Qt
-
-from PyQt5.QtWidgets import QMessageBox
-
-from PyQt5.QtWidgets import QApplication, QWidget,QPushButton, QHBoxLayout, QVBoxLayout
-from PyQt5.QtWidgets import QLineEdit, QFileDialog
-from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem, QHeaderView
-from PyQt5.QtWidgets import QListWidget
-
+import os
+import sys
 from datetime import datetime
 
-
+from PyQt5 import QtWidgets, uic
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QMessageBox
 
 qtcreator_file  = "findBiggestFiles.ui"
 
@@ -77,7 +70,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def onClicked(self,item):
         #QMessageBox.information(self, "Info", item.text())
         try:
-
             self.selected = item.text()
             self.labelSelected.setText(self.selected)
 
@@ -152,11 +144,16 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             print(message)
             self.labelStatus.setText(message)
 
+
     def inspect_dir(self, input_dir):
         contFile = 0
         dirSize = 0
 
         self.input_dir = input_dir
+
+        message = "Status: Analizzando la cartella " + self.input_dir
+        print(message)
+        self.labelStatus.setText(message)
 
         # carica nomi file da cartella
         if os.path.isdir(input_dir):
@@ -164,9 +161,6 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.listWidget.clear()
             self.listOfFiles.clear()
 
-            message = "Status: Analizzando la cartella " + input_dir
-            print(message)
-            self.labelStatus.setText(message)
 
             for root,d_names,f_names in os.walk(input_dir):
                 for fi in f_names:

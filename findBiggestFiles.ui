@@ -26,8 +26,8 @@
    <widget class="QLabel" name="labelTitle">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>0</y>
+      <x>430</x>
+      <y>10</y>
       <width>441</width>
       <height>31</height>
      </rect>
@@ -144,9 +144,9 @@ color: rgb(255, 255, 0);</string>
    <widget class="QListWidget" name="listWidget">
     <property name="geometry">
      <rect>
-      <x>-210</x>
-      <y>120</y>
-      <width>1561</width>
+      <x>20</x>
+      <y>130</y>
+      <width>1331</width>
       <height>381</height>
      </rect>
     </property>
@@ -232,7 +232,7 @@ background-color: rgb(120, 120, 120);</string>
    <widget class="QPushButton" name="buttonDelete">
     <property name="geometry">
      <rect>
-      <x>1230</x>
+      <x>1240</x>
       <y>520</y>
       <width>111</width>
       <height>31</height>
@@ -284,7 +284,7 @@ background-color: rgb(120, 120, 120);</string>
    <widget class="QPushButton" name="buttonFolder">
     <property name="geometry">
      <rect>
-      <x>1080</x>
+      <x>1090</x>
       <y>520</y>
       <width>141</width>
       <height>31</height>
@@ -314,7 +314,7 @@ background-color: rgb(120, 120, 120);</string>
    <widget class="QPushButton" name="buttonWrite">
     <property name="geometry">
      <rect>
-      <x>910</x>
+      <x>920</x>
       <y>520</y>
       <width>161</width>
       <height>31</height>
